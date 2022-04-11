@@ -1,0 +1,6 @@
+[ArchspecJSON]
+git-tree-sha1 = "01d843bc16d2bb2b73ef3236c387931e39692aa8"
+
+    [[ArchspecJSON.download]]
+    sha256 = "18bec3269c86fc5e6dc16b6d6a939b7a4e78f9564628c8c6ff0ca731000690cb"
+    url = "https://github.com/archspec/archspec-json/archive/refs/tags/v0.1.3.tar.gz"
