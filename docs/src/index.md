@@ -15,9 +15,6 @@ package to get access to the information provided by
 [`archspec-json`](https://github.com/archspec/archspec-json), part of the
 [Archspec](https://github.com/archspec) project.
 
-```@index
-```
-
 ## CPU Microarchitectures
 
 A CPU microarchitecture is modeled in `Archspec.jl` by the [`Microarchitecture`](@ref)
@@ -147,6 +144,9 @@ Stacktrace:
 ```
 
 ## API Reference
+
+```@index
+```
 
 ```@autodocs
 Modules = [Archspec]
