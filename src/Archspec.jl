@@ -7,6 +7,8 @@ using JSON
 const cpu_microarchitectures_json_path = joinpath(only(readdir(artifact"ArchspecJSON"; join=true)), "cpu", "microarchitectures.json")
 const cpu_microarchitectures_json = JSON.parsefile(cpu_microarchitectures_json_path)
 
+include("aliases.jl")
+
 struct CompilerSpec
     name::String
     flags::String
@@ -29,7 +31,7 @@ end
 const CPUTargets = Dict{String,Microarchitecture}()
 
 for (name, microarchitecture) in cpu_microarchitectures_json["microarchitectures"]
-    features = microarchitecture["features"]
+    features = Set(microarchitecture["features"])
     compilers = Dict{String,Compiler}()
     from = microarchitecture["from"]
     vendor = microarchitecture["vendor"]
@@ -57,9 +59,26 @@ for (name, microarchitecture) in cpu_microarchitectures_json["microarchitectures
         end
     end
 
-    CPUTargets[name] = Microarchitecture(name, Set(features), compilers, from, vendor)
+    CPUTargets[name] = Microarchitecture(name, features, compilers, from, vendor)
 end
 
-Base.in(feature::String, m::Microarchitecture) = in(feature, m.features)
+function augment_features!(m::Microarchitecture)
+    _features = deepcopy(m.features)
+    for alias in FeatureAliases
+        if !isempty(alias.any_of)
+            if any(in(alias.any_of), _features)
+                push!(_features, alias.name)
+            end
+        end
+        if !isempty(alias.families)
+            if any(in(alias.families), m.from)
+                push!(_features, alias.name)
+            end
+        end
+    end
+    _features
+end
+
+Base.in(feature::String, m::Microarchitecture) = in(feature, augment_features!(m))
 
 end
