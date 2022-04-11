@@ -1,0 +1,13 @@
+name = "Archspec"
+uuid = "4f8bad6f-3ad2-450c-8504-9b46232651f7"
+authors = ["Mosè Giordano <mose@gnu.org> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.6"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
