@@ -81,8 +81,35 @@ function augment_features!(m::Microarchitecture)
     _features
 end
 
+"""
+    in(feature::String, m::Microarchitecture) -> Bool
+    ∈(feature::String, m::Microarchitecture) -> Bool
+
+Return whether the given `feature` is available in the microarchitecture `m`.
+
+```jldoctest
+julia> "sse3" in Archspec.CPUTargets["broadwell"]
+true
+
+julia> "avx512" in Archspec.CPUTargets["haswell"]
+false
+```
+"""
 Base.in(feature::String, m::Microarchitecture) = in(feature, augment_features!(m))
 
+"""
+    getindex(c::Compiler, v::VersionNumber)
+
+Return the list of compiler flags for the given compiler version.
+
+```jldoctest
+julia> Archspec.CPUTargets["x86_64_v2"].compilers["gcc"][v"5.2"]
+"-march=x86_64_v2 -mtune=generic -mcx16 -msahf -mpopcnt -msse3 -msse4.1 -msse4.2 -mssse3"
+
+julia> Archspec.CPUTargets["x86_64_v2"].compilers["gcc"][v"11.1"]
+"-march=x86_64_v2 -mtune=generic"
+```
+"""
 function Base.getindex(c::Compiler, v::VersionNumber)
     idx = findfirst(s -> v ∈ s.versions, c.specs)
     if idx === nothing
