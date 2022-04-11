@@ -9,6 +9,12 @@ const cpu_microarchitectures_json = JSON.parsefile(cpu_microarchitectures_json_p
 
 include("aliases.jl")
 
+"""
+    CompilerSpec
+
+`CompilerSpec` is a composite structure modeling an instance of a compiler for a given
+microarchitecture and a specific version number, or range of versions.
+"""
 struct CompilerSpec
     name::String
     flags::String
@@ -16,12 +22,22 @@ struct CompilerSpec
     warnings::String
 end
 
+"""
+    Compiler
+
+`Compiler` is a composite structure modeling a compiler for a given microarchitecture.
+"""
 struct Compiler
     target::String
     name::String
     specs::Vector{CompilerSpec}
 end
 
+"""
+    Microarchitecture
+
+`Microarchitecture` is a composite structure modeling a CPU microarchitecture.
+"""
 struct Microarchitecture
     name::String
     features::Set{String}
@@ -113,7 +129,7 @@ julia> Archspec.CPUTargets["x86_64_v2"].compilers["gcc"][v"11.1"]
 function Base.getindex(c::Compiler, v::VersionNumber)
     idx = findfirst(s -> v ∈ s.versions, c.specs)
     if idx === nothing
-        error("Version $(v) of $(c.name) is not compatible with the $(c.target) microarchitecture")
+        error("cannot produce optimized binary for micro-architecture \"$(c.target)\" with $(c.name)@$(v)")
     end
     return c.specs[idx].flags
 end
