@@ -17,6 +17,8 @@ struct CompilerSpec
 end
 
 struct Compiler
+    target::String
+    name::String
     specs::Vector{CompilerSpec}
 end
 
@@ -55,7 +57,7 @@ for (name, microarchitecture) in cpu_microarchitectures_json["microarchitectures
                     get(spec, "warnings", ""),
                 ))
             end
-            compilers[compiler_name] = Compiler(specs)
+            compilers[compiler_name] = Compiler(name, compiler_name, specs)
         end
     end
 
@@ -80,5 +82,18 @@ function augment_features!(m::Microarchitecture)
 end
 
 Base.in(feature::String, m::Microarchitecture) = in(feature, augment_features!(m))
+
+function Base.getindex(c::Compiler, v::VersionNumber)
+    idx = findfirst(s -> v ∈ s.versions, c.specs)
+    if idx === nothing
+        error("Version $(v) of $(c.name) is not compatible with the $(c.target) microarchitecture")
+    end
+    return c.specs[idx].flags
+end
+
+for op in (:(==), :(<), :(<=))
+    @eval Base.$(op)(a::Microarchitecture, b::Microarchitecture) =
+        Base.$(op)(a.features, b.features)
+end
 
 end
