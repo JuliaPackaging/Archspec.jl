@@ -6,11 +6,11 @@ DocMeta.setdocmeta!(Archspec, :DocTestSetup, :(using Archspec); recursive=true)
 makedocs(;
     modules=[Archspec],
     authors="Mosè Giordano <mose@gnu.org> and contributors",
-    repo="https://github.com/giordano/Archspec.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/JuliaPackaging/Archspec.jl/blob/{commit}{path}#{line}",
     sitename="Archspec.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://giordano.github.io/Archspec.jl",
+        canonical="https://juliapackaging.github.io/Archspec.jl",
         assets=String[],
     ),
     pages=[
@@ -19,6 +19,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/giordano/Archspec.jl",
+    repo="github.com/JuliaPackaging/Archspec.jl",
     devbranch="main",
 )
