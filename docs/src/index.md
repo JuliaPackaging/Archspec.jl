@@ -2,6 +2,12 @@
 CurrentModule = Archspec
 ```
 
+```@meta
+DocTestSetup = quote
+using Archspec
+end
+```
+
 # Archspec
 
 [Archspec](https://github.com/giordano/Archspec.jl) is a [Julia](https://julialang.org/)
