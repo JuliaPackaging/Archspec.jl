@@ -53,7 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
       - run: |
-          julia --project=docs -e '
+          julia --project=docs --color=yes -e '
             using Documenter: DocMeta, doctest
             using Archspec
             DocMeta.setdocmeta!(Archspec, :DocTestSetup, :(using Archspec); recursive=true)
