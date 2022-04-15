@@ -4,6 +4,8 @@ using Artifacts
 using Pkg
 using JSON
 
+export optimization_flags
+
 const cpu_microarchitectures_json_path = joinpath(only(readdir(artifact"ArchspecJSON"; join=true)), "cpu", "microarchitectures.json")
 const cpu_microarchitectures_json = JSON.parsefile(cpu_microarchitectures_json_path)
 
@@ -114,19 +116,23 @@ false
 Base.in(feature::String, m::Microarchitecture) = in(feature, augment_features!(m))
 
 """
-    getindex(c::Compiler, v::VersionNumber)
+    optimization_flags(c::Compiler, v::VersionNumber)
 
 Return the list of compiler flags for the given compiler version.
 
 ```jldoctest
-julia> Archspec.CPUTargets["x86_64_v2"].compilers["gcc"][v"5.2"]
+julia> optimization_flags(Archspec.CPUTargets["x86_64_v2"], "gcc", v"5.2")
 "-march=x86_64_v2 -mtune=generic -mcx16 -msahf -mpopcnt -msse3 -msse4.1 -msse4.2 -mssse3"
 
-julia> Archspec.CPUTargets["x86_64_v2"].compilers["gcc"][v"11.1"]
+julia> optimization_flags(Archspec.CPUTargets["x86_64_v2"], "gcc", v"11.1")
 "-march=x86_64_v2 -mtune=generic"
 ```
 """
-function Base.getindex(c::Compiler, v::VersionNumber)
+function optimization_flags(microarchitecture::Microarchitecture, compiler::String, v::VersionNumber)
+    if !haskey(microarchitecture.compilers, compiler)
+        error("the compiler \"$(compiler)\" is not available for micro-architecture \"$(microarchitecture.name)\"")
+    end
+    c = microarchitecture.compilers[compiler]
     idx = findfirst(s -> v ∈ s.versions, c.specs)
     if idx === nothing
         error("cannot produce optimized binary for micro-architecture \"$(c.target)\" with $(c.name)@$(v)")

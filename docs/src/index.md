@@ -117,17 +117,17 @@ Another information that each microarchitecture object has available is which co
 needs to be used to emit code optimized for itself:
 
 ```jldoctests
-julia> Archspec.CPUTargets["broadwell"].compilers["clang"][v"11.0.1"]
+julia> optimization_flags(Archspec.CPUTargets["broadwell"], "clang", v"11.0.1")
 "-march=broadwell -mtune=broadwell"
 ```
 
 Sometimes compiler flags change across versions of the same compiler:
 
 ```jldoctests
-julia> Archspec.CPUTargets["thunderx2"].compilers["gcc"][v"5.1"]
+julia> optimization_flags(Archspec.CPUTargets["thunderx2"], "gcc", v"5.1")
 "-march=armv8-a+crc+crypto"
 
-julia> Archspec.CPUTargets["thunderx2"].compilers["gcc"][v"9.1"]
+julia> optimization_flags(Archspec.CPUTargets["thunderx2"], "gcc", v"9.1")
 "-mcpu=thunderx2t99"
 ```
 
@@ -135,7 +135,7 @@ If a compiler is known to not be able to optimize for a given architecture an ex
 raised:
 
 ```jldoctest
-julia> Archspec.CPUTargets["icelake"].compilers["gcc"][v"4.8.5"]
+julia> optimization_flags(Archspec.CPUTargets["icelake"], "gcc", v"4.8.5")
 ERROR: cannot produce optimized binary for micro-architecture "icelake" with gcc@4.8.5
 Stacktrace:
  [1] error(s::String)
