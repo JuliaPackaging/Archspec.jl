@@ -116,9 +116,9 @@ false
 Base.in(feature::String, m::Microarchitecture) = in(feature, augment_features!(m))
 
 """
-    optimization_flags(c::Compiler, v::VersionNumber)
+    optimization_flags(microarchitecture::Microarchitecture, compiler::String, version::VersionNumber)
 
-Return the list of compiler flags for the given compiler version.
+Return the list of compiler flags for the given micro-architecture using the given compiler version.
 
 ```jldoctest
 julia> optimization_flags(Archspec.CPUTargets["x86_64_v2"], "gcc", v"5.2")
